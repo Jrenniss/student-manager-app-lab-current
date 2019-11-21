@@ -1,6 +1,9 @@
 package ie.gmit.studentmanager;
 
 import java.io.Serializable;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.ObjectOutputStream;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -11,10 +14,10 @@ import javafx.stage.Stage;
 
 public class Main extends Application implements Serializable {
 
-	private static final long serialVersionUID = 1L; // Used for serialization
-	StudentManager sm = new StudentManager(); // Used for managing students
+    private static final long serialVersionUID = 1L; // Used for serialization
+    StudentManager sm = new StudentManager(); // Used for managing students
 
-	@Override
+    @Override
 	public void start(Stage primaryStage) {
 		// Create TextArea node for bottom of scene 1
 		TextArea taMyOutput = new TextArea();
@@ -63,7 +66,28 @@ public class Main extends Application implements Serializable {
 
 			sm.deleteStudentById(tfStudentDel.getText());
 
-		});
+        });
+        
+        // Save to DB
+        Button btnSaveDB = new Button("Save DB");
+        btnSaveDB.setOnAction(e -> {
+            if(sm.findTotalStudents() > 0){
+                try{
+                    File studentDB = new File("./resources/studentsDB.ser");
+                    ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(studentsDB.ser));
+                    out.writeObject(sm);
+                    out.close();
+                    taMyOuput.setText("Student Database Saved");
+                    }catch(Exception exception){
+                        System.out.print("[Error] Cannot save DB. Cause:");
+                        exception.printStackTrace();
+                        taMyOutput.setText("[Error]  Failed to save to dtudents datdbase");
+                    }
+                 
+                 }else{
+                 taMyOutput.setText("No Student in List to Save");
+                }
+        });
 
 		// Adding and arranging all the nodes in the grid - add(node, column, row)
 		GridPane gridPane1 = new GridPane();
@@ -72,8 +96,10 @@ public class Main extends Application implements Serializable {
 		gridPane1.add(btnShowTotal, 0, 1);
 		gridPane1.add(tfTotalNumberOfStudents, 1, 1);
 		gridPane1.add(tfStudentDel, 0, 2);
-		gridPane1.add(btnDelStudent, 1, 2);
-		gridPane1.add(taMyOutput, 0, 3, 2, 1);
+        gridPane1.add(btnSaveDB, 0, 4);
+        gridPane1.add(btnDelStudent, 2,3);
+        gridPane1.add(taMyOutput, 0, 5, 2, 1);
+       
 
 		// Preparing the Stage (i.e. the container of any JavaFX application)
 		// Create a Scene by passing the root group object, height and width
@@ -92,7 +118,7 @@ public class Main extends Application implements Serializable {
 		primaryStage.show();
 	}
 
-	public static void main(String[] args) {
-		launch(args);
-	}
+    public static void main(String[] args) {
+        launch(args);
+    }
 }

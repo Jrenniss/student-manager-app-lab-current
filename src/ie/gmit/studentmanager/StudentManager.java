@@ -10,10 +10,12 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.io.Serializable;
 
-public class StudentManager {
+public class StudentManager  implements Serializable{
 
-	// Declare a List called students to hold the student objects
+	private static final long serialVersionUID = 1L;
+    // Declare a List called students to hold the student objects
 	private List<Student> studentList;
 
 	// Constructor

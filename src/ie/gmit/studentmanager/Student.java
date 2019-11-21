@@ -1,8 +1,9 @@
 package ie.gmit.studentmanager;
 
 import java.util.Date;
+import java.io.Serializable;
 
-public class Student {
+public class Student implements Serializable{
 	// Instance Variables
 	private String studentId;
 	private String firstName;
